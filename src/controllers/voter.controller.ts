@@ -44,7 +44,7 @@ export const registerVoter = async (req: Request, res: Response) => {
 
 		await newVoter.save();
 
-		return res.status(HttpStatusCode.CREATED).json({ message: "Voter registered successfully!" });
+		return res.status(HttpStatusCode.CREATED).json({ message: `Voter registered successfully with Voter ID ${voterID}!` });
 	} catch (error) {
 		console.log(error);
 

@@ -9,7 +9,7 @@ import { generateUniqueID } from "../helpers/uniqueID.helper";
 import { deleteVoterImage, saveVoterImage } from "../helpers/imageManage.helper";
 
 configDotenv();
-const { TEMP_VOTERS_PATH } = process.env;
+const { TEMP_VOTERS_PATH, FACE_RECOGNITION_MICROSERVICE_PATH } = process.env;
 
 export const submitVote = async (req: Request, res: Response) => {
 	const { aadhaarNumber, _id: candidateId, base64Data } = req.body;
@@ -29,7 +29,7 @@ export const submitVote = async (req: Request, res: Response) => {
 
 		const voterVerified: any = await axios({
 			method: "post",
-			url: "http://127.0.0.1:8000/compare_images",
+			url: `${FACE_RECOGNITION_MICROSERVICE_PATH}/compare_images`,
 			data: {
 				image1_url: voter.pictureURL,
 				image2_url: tempPictureURL,
@@ -45,9 +45,7 @@ export const submitVote = async (req: Request, res: Response) => {
 			await deleteVoterImage(tempID, TEMP_VOTERS_PATH);
 
 			return res.status(HttpStatusCode.CREATED).json({ message: "Voted Successfully!" });
-		}
-
-		return res.status(HttpStatusCode.BAD_REQUEST).json({ message: "Voter cannot be verified!" });
+		} else return res.status(HttpStatusCode.BAD_REQUEST).json({ message: "Voter cannot be verified!" });
 	} catch (error) {
 		return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
 	}
