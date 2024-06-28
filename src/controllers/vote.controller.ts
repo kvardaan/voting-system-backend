@@ -57,7 +57,7 @@ export const getVotes = async (req: Request, res: Response) => {
 
 		let maxVotes = 0;
 		let winners: any = [];
-		let tiedCandidates = [];
+		let tiedCandidates: any = [];
 		let anyVotes = false;
 
 		for (const candidate of candidates) {
@@ -68,7 +68,7 @@ export const getVotes = async (req: Request, res: Response) => {
 			if (candidate.votes > maxVotes) {
 				maxVotes = candidate.votes;
 				winners = [candidate];
-				tiedCandidates = [];
+				tiedCandidates = [candidate.candidateName];
 			} else if (candidate.votes === maxVotes && candidate.votes > 0) {
 				winners.push(candidate);
 				tiedCandidates.push(candidate.candidateName);
@@ -82,7 +82,7 @@ export const getVotes = async (req: Request, res: Response) => {
 				message = `Candidate ${winners[0].candidateName} is the winner with ${maxVotes} votes`;
 				winnerData = winners[0];
 			} else if (winners.length > 1) {
-				message = `There is a tie between candidates: ${tiedCandidates.join(", ")} with ${maxVotes} votes`;
+				message = `There is a tie between candidates: ${tiedCandidates.join(", ")}`;
 			}
 		}
 
